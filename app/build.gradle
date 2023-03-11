@@ -1,0 +1,41 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.nixiedroid.server'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.nixiedroid.server"
+        minSdk 16
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            //https://developer.android.com/studio/build/optimize-your-build
+            crunchPngs true
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    // (Java only)
+    implementation "androidx.work:work-runtime:2.8.0"
+
+    //noinspection GradlePath
+    implementation files('C:/Users/someb/Documents/IdeaProjects/SocketServer/target/ServerBackend.jar')
+//    implementation 'androidx.appcompat:appcompat:1.6.1'
+}
