@@ -4,13 +4,14 @@ import com.nixiedroid.logger.LoggerStub;
 import com.nixiedroid.settings.LogLevel;
 import com.nixiedroid.settings.ServerSettings;
 import com.nixiedroid.sowftwareId.GeneratorStub;
+import com.nixiedroid.sowftwareId.SimpleGenerator;
 import com.nixiedroid.sowftwareId.fallback.FallbackGenerator;
 
 public class AndroidSettings implements ServerSettings {
     private static final LoggerStub LOGGER = new LoggerStub(new AndroidLogger());
     private static final GeneratorStub GENERATOR = new GeneratorStub(new FallbackGenerator());
-    private LogLevel level = LogLevel.VERBOSE;
-    private int port = 8066;
+    private LogLevel level = LogLevel.INFO;
+    private int port = 1688;
     private int pingTime = 0x78;
     private int delayTime = 0x2760;
     private int clients = 0x32;
