@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.text.format.Formatter;
 import android.widget.Toast;
+import com.android.ims.internal.uce.uceservice.ImsUceManager;
 import com.nixiedroid.Program;
 import com.nixiedroid.SecretConfig;
 import com.nixiedroid.confg.ConfigStub;
+import com.nixiedroid.settings.LogLevel;
 import com.nixiedroid.settings.ServerSettingsStub;
 
 import java.net.InetAddress;
@@ -16,6 +18,8 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 public class ServerStarter extends Service {
+
+    boolean isRunning = false;
     public static void stop(){
         Program.stop();
     }
@@ -24,16 +28,29 @@ public class ServerStarter extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Toast.makeText(this,"Server started",Toast.LENGTH_SHORT).show();
-        Program.start();
+        ConfigStub stub = new ConfigStub(new SecretConfig());
+        ServerSettingsStub settingsStub = new ServerSettingsStub(new AndroidSettings());
+        settingsStub.setLevel(LogLevel.INFO);
+        Program.setConfig(stub,settingsStub);
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if ((flags & START_FLAG_RETRY) == 0) {
+            Toast.makeText(this,"Retry",Toast.LENGTH_SHORT).show();
+            if (!isRunning && Program.config()!=null){
+                Toast.makeText(this,"Server started",Toast.LENGTH_SHORT).show();
+                Program.start();
+            } else {
+                Toast.makeText(this,"Server is already",Toast.LENGTH_LONG).show();
+            }
+
+            isRunning = true;
             // TODO Если это повторный запуск, выполнить какие-то действия.
         }
         else {
+            Toast.makeText(this,"Strt command",Toast.LENGTH_SHORT).show();
 
         }
         return Service.START_STICKY;

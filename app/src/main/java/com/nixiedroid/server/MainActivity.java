@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemPropertiesProto;
 import android.text.format.Formatter;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -27,28 +28,24 @@ import java.util.Enumeration;
 
 public class MainActivity extends Activity {
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Program.settings().setLevel(LogLevel.NONE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         weakActivity = new WeakReference<>(MainActivity.this);
-        ConfigStub stub = new ConfigStub(new SecretConfig());
-        ServerSettingsStub settingsStub = new ServerSettingsStub(new AndroidSettings());
-        settingsStub.setLevel(LogLevel.NONE);
-        Program.setConfig(stub,settingsStub);
-
-
-        if (Build.VERSION.SDK_INT > 17){
-            System.out.println("WAT");
-        }
-
         setContentView(R.layout.main_activity);
         TextView textView = findViewById(R.id.textView2);
         textView.setMovementMethod(new ScrollingMovementMethod());
     }
     public void startServer(View view){
         startService(new Intent(this,ServerStarter.class));
+
     }
     public void stopServer(View view){
         stopService(new Intent(this,ServerStarter.class));
@@ -60,7 +57,7 @@ public class MainActivity extends Activity {
     public static WeakReference<MainActivity> weakActivity;
 
     public static MainActivity getInstanceActivity() {
-        return weakActivity.get();
+        return (weakActivity==null)?null:weakActivity.get();
     }
 
     public void setMessage(final String text) {
