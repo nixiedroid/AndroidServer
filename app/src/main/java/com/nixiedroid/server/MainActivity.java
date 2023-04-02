@@ -27,25 +27,38 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 public class MainActivity extends Activity {
+    static private boolean isAlive = false;
+    static public String START_SERVER = "START_SERVER";
+    public static boolean isAlive(){
+        return isAlive;
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Program.settings().setLevel(LogLevel.NONE);
+        isAlive = false;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        isAlive = true;
         weakActivity = new WeakReference<>(MainActivity.this);
         setContentView(R.layout.main_activity);
         TextView textView = findViewById(R.id.textView2);
         textView.setMovementMethod(new ScrollingMovementMethod());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+
+            //TODO check and ask for permission
+//            getApplicationContext().checkPermission(NOTIFICATION_SERVICE)
+        }
     }
     public void startServer(View view){
-        startService(new Intent(this,ServerStarter.class));
-
+        Intent startIntent = new Intent(getApplicationContext(), ServerStarter.class);
+        startIntent.setAction(START_SERVER);
+        startService(startIntent);
+       // startService(new Intent(this,ServerStarter.class));
     }
     public void stopServer(View view){
         stopService(new Intent(this,ServerStarter.class));

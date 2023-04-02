@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Server</string>
+    <string name="channel_name">Server Info</string>
+    <string name="channel_description">Information about running in background server</string>
 </resources>
