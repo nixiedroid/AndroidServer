@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.SystemPropertiesProto;
 import android.text.format.Formatter;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import com.nixiedroid.Program;
@@ -32,6 +34,9 @@ public class MainActivity extends Activity {
     public static boolean isAlive(){
         return isAlive;
     }
+
+    ServerStarter server;
+    boolean isServerBound = false;
 
     @Override
     protected void onDestroy() {
@@ -73,6 +78,22 @@ public class MainActivity extends Activity {
         return (weakActivity==null)?null:weakActivity.get();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.settings) {
+            Intent intent = new Intent(this, Preferences.class);
+            startActivity(intent);
+
+            return (true);
+        }
+        return(super.onOptionsItemSelected(item));
+    }
     public void setMessage(final String text) {
         runOnUiThread(new Runnable() {
             public void run(){

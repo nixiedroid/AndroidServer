@@ -33,7 +33,7 @@
         android:layout_marginLeft="28dp"
         android:layout_marginTop="23dp"
         android:onClick="startServer"
-        android:text="Start" />
+        android:text="@string/start_name" />
 
     <Button
         android:id="@+id/button2"
@@ -46,7 +46,7 @@
         android:layout_marginEnd="39dp"
         android:layout_marginRight="39dp"
         android:onClick="stopServer"
-        android:text="Stop" />
+        android:text="@string/stop_name" />
 
     <Button
         android:id="@+id/button3"
@@ -56,6 +56,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
         android:onClick="update"
-        android:text="Clear" />
+        android:text="@string/clear_log_name" />
 
 </RelativeLayout>

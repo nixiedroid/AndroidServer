@@ -1,4 +1,4 @@
-package com.nixiedroid.server;
+package com.nixiedroid.server.persistHelper;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
