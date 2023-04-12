@@ -1,106 +1,127 @@
 package com.nixiedroid.server;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemPropertiesProto;
-import android.text.format.Formatter;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-import com.nixiedroid.Program;
-import com.nixiedroid.SecretConfig;
-import com.nixiedroid.confg.ConfigStub;
 import com.nixiedroid.server.server.AndroidLogger;
-import com.nixiedroid.server.server.AndroidSettings;
 import com.nixiedroid.server.server.ServerStarter;
-import com.nixiedroid.settings.LogLevel;
-import com.nixiedroid.settings.ServerSettingsStub;
 
-import java.lang.ref.WeakReference;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
+import java.util.LinkedList;
+
 
 public class MainActivity extends Activity {
-    static private boolean isAlive = false;
-    static public String START_SERVER = "START_SERVER";
-    public static boolean isAlive(){
-        return isAlive;
-    }
-
-    ServerStarter server;
-    boolean isServerBound = false;
+    MessagesUpdater updater;
+    TextView textView;
+    Button startStopButton;
 
     @Override
     protected void onDestroy() {
+        updater.destroyUpdater();
         super.onDestroy();
-        isAlive = false;
+    }
+    @Override
+    protected void onPause() {
+        updater.destroyUpdater();
+        super.onPause();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updater = new MessagesUpdater(textView, AndroidLogger.getMessages());
+        updater.start();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isAlive = true;
-        weakActivity = new WeakReference<>(MainActivity.this);
         setContentView(R.layout.main_activity);
-        TextView textView = findViewById(R.id.textView2);
-        textView.setMovementMethod(new ScrollingMovementMethod());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
 
-            //TODO check and ask for permission
-//            getApplicationContext().checkPermission(NOTIFICATION_SERVICE)
+        startStopButton = findViewById(R.id.startStopButton);
+        if (ServerStarter.isRunning) startStopButton.setText(R.string.stop_name);
+
+        textView = findViewById(R.id.serverLog);
+        textView.setMovementMethod(new ScrollingMovementMethod());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            checkNotificationPermission();
         }
     }
-    public void startServer(View view){
-        Intent startIntent = new Intent(getApplicationContext(), ServerStarter.class);
-        startIntent.setAction(START_SERVER);
-        startService(startIntent);
-       // startService(new Intent(this,ServerStarter.class));
-    }
-    public void stopServer(View view){
-        stopService(new Intent(this,ServerStarter.class));
-    }
-    public void update(View view){
-        TextView textView = findViewById(R.id.textView2);
-        textView.setText("");
-    }
-    public static WeakReference<MainActivity> weakActivity;
 
-    public static MainActivity getInstanceActivity() {
-        return (weakActivity==null)?null:weakActivity.get();
+    public void startStopServer(View view) {
+        if (ServerStarter.isRunning) {
+            stopService(new Intent(this, ServerStarter.class));
+            if (!ServerStarter.isRunning) startStopButton.setText(R.string.start_name);
+        } else {
+            startService(new Intent(this, ServerStarter.class));
+            if (!ServerStarter.isRunning) startStopButton.setText(R.string.stop_name);
+        }
+
+    }
+    private void checkNotificationPermission(){
+        //TODO check and ask for permission
+        //getApplicationContext().checkPermission(NOTIFICATION_SERVICE)
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Preferences.class);
             startActivity(intent);
-
             return (true);
         }
-        return(super.onOptionsItemSelected(item));
+        return (super.onOptionsItemSelected(item));
     }
-    public void setMessage(final String text) {
-        runOnUiThread(new Runnable() {
-            public void run(){
-                TextView textView = findViewById(R.id.textView2);
-                textView.append(text + "\n");
+
+
+    public class MessagesUpdater extends Thread {
+
+        private final TextView textView;
+        private final LinkedList<String> messages;
+        private boolean isRunning = true;
+
+        public MessagesUpdater(TextView textView, LinkedList<String> messages) {
+            this.textView = textView;
+            this.messages = messages;
+        }
+
+        public void destroyUpdater() {
+            isRunning = false;
+        }
+        public void update() {
+            textView.setText("");
+            for (String str : messages) {
+                textView.append(str + "\n");
             }
-        });
+        }
+
+        public void run() {
+            try {
+                while (isRunning) {
+                    Thread.sleep(500);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            update();
+                        }
+                    });
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 }

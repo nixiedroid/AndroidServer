@@ -8,5 +8,6 @@
         android:key="portSettings"
         android:title="Port"
         android:defaultValue="1688"
+        android:inputType="number"
         android:hint=":1688"/>
 </PreferenceScreen>

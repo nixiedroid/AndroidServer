@@ -9,7 +9,7 @@ import com.nixiedroid.sowftwareId.fallback.Generator;
 public class AndroidSettings implements ServerSettings {
     private static final LoggerStub LOGGER = new LoggerStub(new AndroidLogger());
     private static final GeneratorStub GENERATOR = new GeneratorStub(new Generator());
-    private LogLevel level = LogLevel.DEBUG;
+    private LogLevel level = LogLevel.INFO;
     private int port = 1688;
     private int pingTime = 0x78;
     private int delayTime = 0x2760;
@@ -74,8 +74,8 @@ public class AndroidSettings implements ServerSettings {
     }
 
     @Override
-    public void setPort(int i) {
-
+    public void setPort(int port) {
+        this.port = port;
     }
 
     @Override
@@ -89,8 +89,8 @@ public class AndroidSettings implements ServerSettings {
     }
 
     @Override
-    public void setClientCount(int i) {
-
+    public void setClientCount(int count) {
+        this.clients = count;
     }
 
     @Override

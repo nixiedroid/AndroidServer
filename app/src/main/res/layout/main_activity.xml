@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/serverLog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
@@ -23,39 +23,17 @@
         android:text="" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginTop="23dp"
-        android:onClick="startServer"
-        android:text="@string/start_name" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="23dp"
-        android:layout_marginEnd="39dp"
-        android:layout_marginRight="39dp"
-        android:onClick="stopServer"
-        android:text="@string/stop_name" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
+        android:id="@+id/startStopButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:onClick="update"
-        android:text="@string/clear_log_name" />
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginEnd="100dp"
+        android:onClick="startStopServer"
+        android:text="@string/start_name"
+         />
+
 
 </RelativeLayout>

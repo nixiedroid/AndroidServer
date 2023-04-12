@@ -1,13 +1,19 @@
 package com.nixiedroid.server.server;
 
-
-import com.nixiedroid.server.MainActivity;
+import java.util.LinkedList;
 
 public class AndroidLogger implements com.nixiedroid.logger.Logger {
+
+    private static final LinkedList<String> messages = new LinkedList<>();
+
     private void setMessage(String s){
-        if (activity!= null) activity.setMessage(s);
+        if (messages.size()>=20) messages.poll();
+        messages.add(s);
     }
-    MainActivity activity = MainActivity.getInstanceActivity();
+    public static LinkedList<String> getMessages(){
+        return messages;
+    }
+
     @Override
     public void err(String s) {
         setMessage(s);
