@@ -23,11 +23,11 @@
             android:name=".Preferences">
         </activity>
         <service
-                android:name=".server.ServerStarter"
+                android:name=".server.ServerService"
                 android:enabled="true"
                 android:exported="false">
         </service>
-        <receiver android:name=".persistHelper.BootReciever" android:exported="false">
+        <receiver android:name=".persistHelper.BootReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>

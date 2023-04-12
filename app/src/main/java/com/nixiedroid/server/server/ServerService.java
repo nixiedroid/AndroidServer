@@ -15,12 +15,13 @@ import com.nixiedroid.confg.ConfigStub;
 import com.nixiedroid.server.Notifications;
 import com.nixiedroid.settings.ServerSettingsStub;
 
-public class ServerStarter extends Service implements SharedPreferences.OnSharedPreferenceChangeListener  {
+public class ServerService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener  {
 
     public static boolean isRunning = false;
     private Notifications notify;
     private ServerSettingsStub settings;
     private SharedPreferences preferences;
+
 
     @Override
     public void onCreate() {

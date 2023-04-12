@@ -9,7 +9,7 @@ import android.os.Build;
 
 public class Notifications {
     final NotificationManager nm;
-    String appname = "Server";
+    String appName = "Server";
     String CHANNEL_ID  ="server";
     String CHANNEL_ID_QUIET  ="serverMuted";
     int icon = R.drawable.ic_notification;
@@ -41,7 +41,7 @@ public class Notifications {
                     .build();
         } else {
             notification = new Notification(icon, message, 0);
-            notification.setLatestEventInfo(context, appname, message, null);
+            notification.setLatestEventInfo(context, appName, message, null);
             notification.flags = Notification.FLAG_AUTO_CANCEL;
         }
 

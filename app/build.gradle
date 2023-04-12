@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.nixiedroid.server"
-        minSdk 5
+        minSdk 14
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -32,8 +32,7 @@ android {
 }
 
 dependencies {
-    // (Java only)
-   // implementation "androidx.work:work-runtime:2.8.0"
+    implementation "androidx.work:work-runtime:2.8.1"
 
     //noinspection GradlePath
     implementation files('C:/Users/someb/Documents/IdeaProjects/SocketServer/target/ServerBackend.jar')

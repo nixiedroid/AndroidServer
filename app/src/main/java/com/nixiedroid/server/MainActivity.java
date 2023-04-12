@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.nixiedroid.server.server.AndroidLogger;
-import com.nixiedroid.server.server.ServerStarter;
+import com.nixiedroid.server.server.ServerService;
 
 import java.util.LinkedList;
 
@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
     MessagesUpdater updater;
     TextView textView;
     Button startStopButton;
+   // private Worker worker;
 
     @Override
     protected void onDestroy() {
@@ -44,7 +45,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main_activity);
 
         startStopButton = findViewById(R.id.startStopButton);
-        if (ServerStarter.isRunning) startStopButton.setText(R.string.stop_name);
+        if (ServerService.isRunning) startStopButton.setText(R.string.stop_name);
 
         textView = findViewById(R.id.serverLog);
         textView.setMovementMethod(new ScrollingMovementMethod());
@@ -52,15 +53,16 @@ public class MainActivity extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             checkNotificationPermission();
         }
+       // worker  = new RestarterWorker(getApplicationContext(),);
     }
 
     public void startStopServer(View view) {
-        if (ServerStarter.isRunning) {
-            stopService(new Intent(this, ServerStarter.class));
-            if (!ServerStarter.isRunning) startStopButton.setText(R.string.start_name);
+        if (ServerService.isRunning) {
+            stopService(new Intent(this, ServerService.class));
+            if (!ServerService.isRunning) startStopButton.setText(R.string.start_name);
         } else {
-            startService(new Intent(this, ServerStarter.class));
-            if (!ServerStarter.isRunning) startStopButton.setText(R.string.stop_name);
+            startService(new Intent(this, ServerService.class));
+            if (!ServerService.isRunning) startStopButton.setText(R.string.stop_name);
         }
 
     }
