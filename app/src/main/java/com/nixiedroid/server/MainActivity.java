@@ -2,8 +2,11 @@ package com.nixiedroid.server;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +23,6 @@ public class MainActivity extends Activity {
     MessagesUpdater updater;
     TextView textView;
     Button startStopButton;
-   // private Worker worker;
 
     @Override
     protected void onDestroy() {
@@ -49,24 +51,37 @@ public class MainActivity extends Activity {
 
         textView = findViewById(R.id.serverLog);
         textView.setMovementMethod(new ScrollingMovementMethod());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            checkNotificationPermission();
-        }
-       // worker  = new RestarterWorker(getApplicationContext(),);
+        checkBatteryOptimisation();
+        checkNotificationPermission();
     }
+
 
     public void startStopServer(View view) {
         if (ServerService.isRunning) {
+            ServerService.setUserStop();
             stopService(new Intent(this, ServerService.class));
-            if (!ServerService.isRunning) startStopButton.setText(R.string.start_name);
+            startStopButton.setText(R.string.start_name);
         } else {
             startService(new Intent(this, ServerService.class));
-            if (!ServerService.isRunning) startStopButton.setText(R.string.stop_name);
+            startStopButton.setText(R.string.stop_name);
         }
 
     }
+    private void checkBatteryOptimisation(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = getPackageName();
+            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivity(intent);
+            }
+        }
+    }
     private void checkNotificationPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        }
         //TODO check and ask for permission
         //getApplicationContext().checkPermission(NOTIFICATION_SERVICE)
     }
